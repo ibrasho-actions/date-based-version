@@ -20,4 +20,12 @@ runs:
     - id: generator
       shell: bash
       run: |
+        export V_MAJOR=${{ inputs.major-version }}
+        export V_MINOR=$V_MAJOR.$(date +"%y%m%d" | sed -E 's/^0{1,3}//g')
+        export V_PATCH=$V_MINOR.$(date +"%H%M%S" | sed -E 's/^0{1,3}//g')
+        
         echo ::set-output name=version::$(date +"1.%y%m%d.%H%M%S" | sed -E 's/\.0{1,3}/./g')
+        
+        echo ::set-output name=version-major::${V_MAJOR}
+        echo ::set-output name=version-minor::${V_MINOR}
+        echo ::set-output name=version-patch::${V_PATCH}
