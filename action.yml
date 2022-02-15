@@ -30,6 +30,6 @@ runs:
         
         echo ::set-output name=version::$(date +"1.%y%m%d.%H%M%S" | sed -E 's/\.0{1,3}/./g')
         
-        echo ::set-output name=version-major::${PREFIX}${V_MAJOR}${SUFFIX}
-        echo ::set-output name=version-minor::${PREFIX}${V_MINOR}${SUFFIX}
-        echo ::set-output name=version-patch::${PREFIX}${V_PATCH}${SUFFIX}
+        echo ::set-output name=major::${PREFIX}${V_MAJOR}${SUFFIX}
+        echo ::set-output name=minor::${PREFIX}${V_MINOR}${SUFFIX}
+        echo ::set-output name=patch::${PREFIX}${V_PATCH}${SUFFIX}
