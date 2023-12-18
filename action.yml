@@ -1,4 +1,4 @@
-name: Date-based Version
+name: Date-based Versioning Action
 description: Generate a version number
 author: Ibrahim AshShohail
 inputs:
@@ -22,14 +22,16 @@ runs:
     - id: generator
       shell: bash
       run: |
-        PREFIX=${{ inputs.prefix }}
-        SUFFIX=${{ inputs.suffix }}
+        V_TIMESTAMP=$( TZ=UTC date '+%Y%m%d%H%M%S' )
+        V_COMMIT=$( git rev-parse --short=12 HEAD )
+
         V_MAJOR=${{ inputs.major-version }}
-        V_MINOR=$V_MAJOR.$(date +"%y%m%d" | sed -E 's/^0{1,3}//g')
-        V_PATCH=$V_MINOR.$(date +"%H%M%S" | sed -E 's/^0{1,3}//g')
+        V_MINOR=$V_MAJOR.$( TZ=UTC date +"%y%m%d" | sed -E 's/^0{1,3}//g' )
+        V_PATCH=$V_MINOR.$( TZ=UTC date +"%H%M%S" | sed -E 's/^0{1,3}//g' )
         
-        echo ::set-output name=version::$(date +"1.%y%m%d.%H%M%S" | sed -E 's/\.0{1,3}/./g')
-        
-        echo ::set-output name=version-major::${PREFIX}${V_MAJOR}${SUFFIX}
-        echo ::set-output name=version-minor::${PREFIX}${V_MINOR}${SUFFIX}
-        echo ::set-output name=version-patch::${PREFIX}${V_PATCH}${SUFFIX}
+        echo "::set-output name=timestamp::$V_TIMESTAMP"
+        echo "::set-output name=commit::$V_COMMIT"
+
+        echo ::set-output name=major::${{ inputs.prefix }}${V_MAJOR}${{ inputs.suffix }}
+        echo ::set-output name=minor::${{ inputs.prefix }}${V_MINOR}${{ inputs.suffix }}
+        echo ::set-output name=patch::${{ inputs.prefix }}${V_PATCH}${{ inputs.suffix }}
